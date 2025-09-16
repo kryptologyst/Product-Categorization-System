@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categorization System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .main-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+
+        .content-section {
+            padding: 2rem;
+        }
+
+        .prediction-form {
+            background: var(--light-color);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--dark-color);
+            border: none;
+            border-radius: 10px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+            color: var(--dark-color);
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-bar {
+            background: var(--border-color);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        .probability-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .probability-item:last-child {
+            border-bottom: none;
+        }
+
+        .probability-bar {
+            width: 100px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-left: 1rem;
+        }
+
+        .probability-fill {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .sample-products {
+            background: var(--light-color);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .sample-product {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .sample-product:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner-border {
+            color: var(--primary-color);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 1rem 1.5rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+            
+            .prediction-form {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-container">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-tags"></i> Product Categorization System</h1>
+                <p>AI-powered product classification using machine learning</p>
+            </div>
+
+            <!-- Content -->
+            <div class="content-section">
+                <!-- Model Statistics -->
+                <div class="stats-grid" id="statsGrid">
+                    <!-- Stats will be loaded here -->
+                </div>
+
+                <!-- Prediction Form -->
+                <div class="prediction-form">
+                    <h3 class="mb-4"><i class="fas fa-robot"></i> Predict Product Category</h3>
+                    
+                    <form id="predictionForm">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name *</label>
+                            <input type="text" class="form-control" id="productName" 
+                                   placeholder="e.g., iPhone 15 Pro Max 256GB" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Product Description (Optional)</label>
+                            <textarea class="form-control" id="productDescription" rows="3" 
+                                      placeholder="Detailed description of the product..."></textarea>
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-magic"></i> Predict Category
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                                <i class="fas fa-eraser"></i> Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Analyzing product...</p>
+                </div>
+
+                <!-- Results -->
+                <div id="results"></div>
+
+                <!-- Sample Products -->
+                <div class="sample-products">
+                    <h4 class="mb-3"><i class="fas fa-lightbulb"></i> Try Sample Products</h4>
+                    <p class="text-muted mb-3">Click on any product below to test the categorization system:</p>
+                    <div id="sampleProducts">
+                        <!-- Sample products will be loaded here -->
+                    </div>
+                    <button class="btn btn-secondary mt-2" onclick="loadSampleProducts()">
+                        <i class="fas fa-refresh"></i> Load New Samples
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let categories = [];
+        let modelInfo = {};
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadModelInfo();
+            loadSampleProducts();
+        });
+
+        // Load model information and statistics
+        async function loadModelInfo() {
+            try {
+                const response = await fetch('/api/model_info');
+                const data = await response.json();
+                
+                if (data.success) {
+                    modelInfo = data.model_info;
+                    categories = data.model_info.categories;
+                    displayStats(data.model_info);
+                }
+            } catch (error) {
+                console.error('Error loading model info:', error);
+            }
+        }
+
+        // Display model statistics
+        function displayStats(info) {
+            const statsGrid = document.getElementById('statsGrid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${info.num_categories}</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${info.training_data_size}</div>
+                    <div class="stat-label">Training Products</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${info.max_features}</div>
+                    <div class="stat-label">Features</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${info.algorithm.replace('_', ' ').toUpperCase()}</div>
+                    <div class="stat-label">Algorithm</div>
+                </div>
+            `;
+        }
+
+        // Handle form submission
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const productName = document.getElementById('productName').value.trim();
+            const productDescription = document.getElementById('productDescription').value.trim();
+            
+            if (!productName) {
+                showAlert('Please enter a product name', 'danger');
+                return;
+            }
+            
+            showLoading(true);
+            clearResults();
+            
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        product_name: productName,
+                        description: productDescription
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayPrediction(productName, data.prediction);
+                } else {
+                    showAlert(data.error || 'Prediction failed', 'danger');
+                }
+            } catch (error) {
+                showAlert('Network error. Please try again.', 'danger');
+                console.error('Prediction error:', error);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // Display prediction results
+        function displayPrediction(productName, prediction) {
+            const resultsDiv = document.getElementById('results');
+            
+            const categoryColors = {
+                'Electronics': '#3b82f6',
+                'Clothing & Fashion': '#ec4899',
+                'Home & Garden': '#10b981',
+                'Books & Media': '#f59e0b',
+                'Sports & Outdoors': '#8b5cf6',
+                'Health & Beauty': '#ef4444',
+                'Automotive': '#6b7280'
+            };
+            
+            const categoryColor = categoryColors[prediction.category] || '#6366f1';
+            const confidencePercent = Math.round(prediction.confidence * 100);
+            
+            let probabilitiesHtml = '';
+            const sortedProbs = Object.entries(prediction.all_probabilities)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            sortedProbs.forEach(([cat, prob]) => {
+                const percent = Math.round(prob * 100);
+                probabilitiesHtml += `
+                    <div class="probability-item">
+                        <span>${cat}</span>
+                        <div class="d-flex align-items-center">
+                            <span class="me-2">${percent}%</span>
+                            <div class="probability-bar">
+                                <div class="probability-fill" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = `
+                <div class="result-card">
+                    <h5 class="mb-3"><i class="fas fa-chart-line"></i> Prediction Results</h5>
+                    
+                    <div class="mb-3">
+                        <strong>Product:</strong> ${productName}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <span class="category-badge" style="background: ${categoryColor}; color: white;">
+                            ${prediction.category}
+                        </span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span><strong>Confidence:</strong></span>
+                            <span class="fw-bold">${confidencePercent}%</span>
+                        </div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: ${confidencePercent}%; background: ${categoryColor};"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h6 class="mb-2">All Category Probabilities:</h6>
+                        ${probabilitiesHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load sample products
+        async function loadSampleProducts() {
+            try {
+                const response = await fetch('/api/sample_products?size=8');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displaySampleProducts(data.products);
+                }
+            } catch (error) {
+                console.error('Error loading sample products:', error);
+            }
+        }
+
+        // Display sample products
+        function displaySampleProducts(products) {
+            const sampleDiv = document.getElementById('sampleProducts');
+            
+            sampleDiv.innerHTML = products.map(product => `
+                <div class="sample-product" onclick="fillForm('${product.name.replace(/'/g, "\\'")}', '${product.description.replace(/'/g, "\\'")}')">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <strong>${product.name}</strong>
+                            <div class="text-muted small mt-1">${product.description.substring(0, 100)}...</div>
+                        </div>
+                        <span class="badge bg-secondary ms-2">${product.category}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Fill form with sample product
+        function fillForm(name, description) {
+            document.getElementById('productName').value = name;
+            document.getElementById('productDescription').value = description;
+            document.getElementById('productName').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('predictionForm').reset();
+            clearResults();
+        }
+
+        // Clear results
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // Show/hide loading spinner
+        function showLoading(show) {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = show ? 'block' : 'none';
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="alert alert-${type}" role="alert">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+                    ${message}
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
